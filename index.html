@@ -39,7 +39,7 @@
   --care:#F0907C;--care-soft:#3C2420;--shadow:0 1px 0 rgba(0,0,0,.3),0 10px 26px -14px rgba(0,0,0,.8);color-scheme:dark}
 
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.75;
+body{position:relative;z-index:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.75;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
 .wrap{max-width:1120px;margin:0 auto}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.3;margin:0}
@@ -186,7 +186,24 @@ dialog::backdrop{background:rgba(10,18,22,.55)}
 .copyrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 18px;border-radius:999px;font-size:15px;z-index:50}
 
-footer{margin-top:48px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:18px}
+footer{margin-top:48px;color:var(--muted);font-size:14px}
+/* ---------- 台北天際線 ---------- */
+.sky{display:block;width:100%;color:var(--blue)}
+.sky .far{fill:currentColor;opacity:.35}
+.sky .near{fill:currentColor}
+.bgsky{position:fixed;left:0;right:0;bottom:0;height:clamp(120px,22vh,220px);z-index:-1;pointer-events:none;opacity:.11}
+.bgsky .sky{height:100%}
+.band{margin:4px 0 0;height:clamp(84px,13vw,150px);opacity:.5;border-bottom:2px solid var(--blue);overflow:hidden}
+.band .sky{height:100%}
+.band-cap{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;font-size:12.5px;color:var(--muted);letter-spacing:.06em;margin:6px 0 0}
+.ico{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.18em}
+.chip{display:inline-flex;align-items:center;gap:6px}
+.ticket .cat,.sheet-head .cat{display:flex;align-items:center;gap:6px}
+.ticket .badge{position:absolute;top:12px;right:86px;width:38px;height:38px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center}
+.ticket .badge .ico{width:22px;height:22px}
+.ticket h3{padding-right:44px}
+footer{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:clamp(110px,20vh,200px)}
+
 
 @media (max-width:760px){
   header.hero{grid-template-columns:1fr;gap:22px;padding-top:28px}
@@ -199,6 +216,22 @@ footer{margin-top:48px;color:var(--muted);font-size:14px;border-top:1px solid va
 
 </head>
 <body>
+<div class="bgsky"><svg class="sky" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+<path class="far" d="M0 200V128l70-34 80 28 100-62 90 44 110-50 120 66 100-38 130 48 110-54 100 32 120-44 70 30v106z"/>
+<g class="near">
+<path d="M0 200v-22h40v-14h26v36z"/>
+<path d="M62 200v-70h156v70zM48 130l20-22h144l20 22zM92 108V96h96v12zM80 96l14-16h92l14 16z"/>
+<path fill-rule="evenodd" d="M262 200v-48h76v48h-26v-20a12 12 0 0 0-24 0v20zM250 152l14-22h72l14 22zM276 130v-12h48v12zM266 118l10-13h48l10 13z"/>
+<path d="M388 200v-58h64v58zM378 142l42-38 42 38zM413 104v-10h14v10zM420 84l8 10h-16z"/>
+<path d="M476 200v-40h168v40zM470 160v-6h180v6zM492 154v-18h10v18zM548 154v-26h12v26zM610 154v-16h10v16z"/>
+<path d="M670 200v-50h60v50z"/><path d="M680 150 L675 137 H725 L720 150z"/><path d="M680 137 L675 124 H725 L720 137z"/><path d="M680 124 L675 111 H725 L720 124z"/><path d="M680 111 L675 98 H725 L720 111z"/><path d="M680 98 L675 85 H725 L720 98z"/><path d="M680 85 L675 72 H725 L720 85z"/><path d="M680 72 L675 59 H725 L720 72z"/><path d="M680 59 L675 46 H725 L720 59z"/><path d="M688 46v-8h24v8zM697 38V8h6v30z"/>
+<path d="M748 200v-64h20v64zM772 200V92h28v108zM778 92V78h16v14zM785 78V60h2v18zM806 200v-84h22v84zM832 200v-46h18v46z"/>
+<path d="M858 200v-28h84v28zM884 172l16-34 16 34z"/>
+<circle cx="900" cy="126" r="44" fill="none" stroke="currentColor" stroke-width="4"/>
+<path d="M900 82v88M856 126h88M869 95l62 62M931 95l-62 62" fill="none" stroke="currentColor" stroke-width="2"/>
+<path d="M990 200v-36h92v36zM972 164q14-5 22-20h84q8 15 22 20zM1012 144v-12h48v12zM998 132q10-4 16-15h44q6 11 16 15z"/>
+<path d="M1110 200v-52h24v52zM1138 200v-30h30v30zM1172 200v-44h28v44z"/>
+</g></svg></div>
 <div class="wrap">
   <header class="hero">
     <div>
@@ -212,6 +245,23 @@ footer{margin-top:48px;color:var(--muted);font-size:14px;border-top:1px solid va
       <li><b>聊</b><div><strong>讓長輩當說書人</strong><span>你問、長輩說。記得慢慢來，不糾正記憶，多說「原來是這樣」。</span></div></li>
     </ol>
   </header>
+  <div class="band"><svg class="sky" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+<path class="far" d="M0 200V128l70-34 80 28 100-62 90 44 110-50 120 66 100-38 130 48 110-54 100 32 120-44 70 30v106z"/>
+<g class="near">
+<path d="M0 200v-22h40v-14h26v36z"/>
+<path d="M62 200v-70h156v70zM48 130l20-22h144l20 22zM92 108V96h96v12zM80 96l14-16h92l14 16z"/>
+<path fill-rule="evenodd" d="M262 200v-48h76v48h-26v-20a12 12 0 0 0-24 0v20zM250 152l14-22h72l14 22zM276 130v-12h48v12zM266 118l10-13h48l10 13z"/>
+<path d="M388 200v-58h64v58zM378 142l42-38 42 38zM413 104v-10h14v10zM420 84l8 10h-16z"/>
+<path d="M476 200v-40h168v40zM470 160v-6h180v6zM492 154v-18h10v18zM548 154v-26h12v26zM610 154v-16h10v16z"/>
+<path d="M670 200v-50h60v50z"/><path d="M680 150 L675 137 H725 L720 150z"/><path d="M680 137 L675 124 H725 L720 137z"/><path d="M680 124 L675 111 H725 L720 124z"/><path d="M680 111 L675 98 H725 L720 111z"/><path d="M680 98 L675 85 H725 L720 98z"/><path d="M680 85 L675 72 H725 L720 85z"/><path d="M680 72 L675 59 H725 L720 72z"/><path d="M680 59 L675 46 H725 L720 59z"/><path d="M688 46v-8h24v8zM697 38V8h6v30z"/>
+<path d="M748 200v-64h20v64zM772 200V92h28v108zM778 92V78h16v14zM785 78V60h2v18zM806 200v-84h22v84zM832 200v-46h18v46z"/>
+<path d="M858 200v-28h84v28zM884 172l16-34 16 34z"/>
+<circle cx="900" cy="126" r="44" fill="none" stroke="currentColor" stroke-width="4"/>
+<path d="M900 82v88M856 126h88M869 95l62 62M931 95l-62 62" fill="none" stroke="currentColor" stroke-width="2"/>
+<path d="M990 200v-36h92v36zM972 164q14-5 22-20h84q8 15 22 20zM1012 144v-12h48v12zM998 132q10-4 16-15h44q6 11 16 15z"/>
+<path d="M1110 200v-52h24v52zM1138 200v-30h30v30zM1172 200v-44h28v44z"/>
+</g></svg></div>
+  <div class="band-cap" aria-hidden="true"><span>圓山大飯店</span><span>北門</span><span>西門紅樓</span><span>中華商場</span><span>台北一〇一</span><span>摩天輪</span><span>龍山寺</span></div>
 
   <div class="toolbar" role="search">
     <label class="search">
@@ -290,6 +340,16 @@ footer{margin-top:48px;color:var(--muted);font-size:14px;border-top:1px solid va
 <div class="toast" id="toast" hidden></div>
 
 <script>
+const ICON = {
+"全部":'<path d="M4 5h16M4 12h16M4 19h16"/>',
+"街區地標":'<path d="M3 21h18M5 21v-8h14v8M9.5 21v-4a2.5 2.5 0 0 1 5 0v4M3.5 13l2-4h13l2 4M8 9V7h8v2M6.5 7l1.5-2.5h8L17.5 7"/>',
+"交通":'<rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l1.5-4M15 21l-1.5-4M8.5 14h.01M15.5 14h.01M10 6.5h4"/>',
+"飲食市集":'<path d="M3 11h18a9 9 0 0 1-18 0zM8 21h8M13.5 3l-2 6M18 4l-3.5 5"/>',
+"娛樂流行":'<rect x="3" y="8" width="18" height="12" rx="2"/><rect x="6" y="11" width="8" height="6" rx="1"/><path d="M8 3l4 5 4-5M17.5 12.5h.01M17.5 16h.01"/>',
+"生活日常":'<path d="M4 10.5V20h16v-9.500M3 10l2-5h14l2 5M3 10a2.250 2.250 0 0 0 4.500 0a2.250 2.250 0 0 0 4.500 0a2.250 2.250 0 0 0 4.500 0a2.250 2.250 0 0 0 4.500 0M9.500 20v-5h5v5"/>',
+"時代記憶":'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4M9.500 14H12v3.500"/>'
+};
+const ico = c=>`<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICON[c]||""}</svg>`;
 const CATS = ["街區地標","交通","飲食市集","娛樂流行","生活日常","時代記憶"];
 
 const EPISODES = [
@@ -1036,7 +1096,7 @@ function renderChips(){
   const all = ["全部",...CATS];
   $("#chips").innerHTML = all.map(c=>{
     const n = c==="全部"?EPISODES.length:EPISODES.filter(e=>e.cat===c).length;
-    return `<button class="chip" aria-pressed="${state.cat===c}" data-cat="${c}">${c}<span class="n">${n}</span></button>`}).join("");
+    return `<button class="chip" aria-pressed="${state.cat===c}" data-cat="${c}">${ico(c)}${c}<span class="n">${n}</span></button>`}).join("");
 }
 $("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;state.cat=b.dataset.cat;renderAll()});
 
@@ -1049,6 +1109,7 @@ function renderGrid(){
     <button class="ticket" data-id="${ep.id}" aria-label="第${+ep.id}集 ${esc(ep.title)}">
       <div class="main">
         <div class="cat">${ep.cat}</div>
+        <span class="badge">${ico(ep.cat)}</span>
         <h3>${esc(ep.title)}</h3>
         <div class="sub">${esc(ep.sub)}</div>
         <div class="meta">
@@ -1114,7 +1175,7 @@ function openEp(id){
   $("#sheet").innerHTML = `
     <div class="sheet-head">
       <div>
-        <div class="cat">第 ${+ep.id} 集・${ep.cat}</div>
+        <div class="cat">${ico(ep.cat)}第 ${+ep.id} 集・${ep.cat}</div>
         <h2 id="dtitle">${esc(ep.title)}</h2>
         <div class="sub">${esc(ep.sub)}</div>
         <div class="meta">
@@ -1179,7 +1240,7 @@ function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTi
 async function copy(text){try{await navigator.clipboard.writeText(text);toast("已複製")}catch(e){toast("無法自動複製，請手動選取文字")}}
 
 /* ---------- audio ---------- */
-const AUDIO=new Set(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "26"]);
+const AUDIO=new Set(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "26"]);
 const HOST={m:{name:"阿城伯",badge:"城"},f:{name:"小晴",badge:"晴"}};
 function parseStory(text){
   return text.split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{

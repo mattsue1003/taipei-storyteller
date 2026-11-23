@@ -146,8 +146,8 @@ dialog::backdrop{background:rgba(10,18,22,.55)}
 .rate button{border:1.5px solid var(--line);background:var(--bg);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:14px}
 .rate button[aria-pressed="true"]{border-color:var(--blue);color:var(--blue);font-weight:700}
 .player .note{font-size:13.5px;color:var(--muted);width:100%}
-.progress{flex:1 1 120px;height:6px;background:var(--bg);border-radius:9px;overflow:hidden;min-width:80px}
-.progress i{display:block;height:100%;width:0;background:var(--mustard);transition:width .3s}
+.seek{flex:1 1 140px;min-width:100px;accent-color:var(--mustard);height:28px}
+.time{font-size:13px;color:var(--muted);min-width:5.5em;text-align:right}
 .hosts{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;font-size:14.5px;color:var(--muted)}
 .hosts span{display:inline-flex;align-items:center;gap:8px}
 .who{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:18px;flex:none}
@@ -164,7 +164,7 @@ dialog::backdrop{background:rgba(10,18,22,.55)}
 .turn.m.now .bubble{border-color:var(--blue)}
 .turn.f.now .bubble{border-color:var(--mustard)}
 .bubble .name{display:block;font-size:13px;letter-spacing:.06em;color:var(--muted);font-weight:700;line-height:1.5}
-.story .s{border-radius:4px;cursor:pointer}
+.story .s{border-radius:4px}
 .story .s.on{background:var(--paper);box-shadow:0 0 0 3px var(--paper)}
 .sheet h4{font-family:var(--f-display);font-size:20px;margin:28px 0 10px;display:flex;align-items:center;gap:10px}
 .sheet h4::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -207,7 +207,7 @@ footer{margin-top:48px;color:var(--muted);font-size:14px;border-top:1px solid va
       <p class="lead">每一集是一段台北人共同的記憶：中華商場的天橋、西門町的電影街、淡水線的小火車……先聽老台北「阿城伯」和年輕主持人「小晴」一問一答把故事聊一遍，再帶著準備好的問題，到長輩身邊坐下來，請他們把「那時候」說給你聽。</p>
     </div>
     <ol class="steps" aria-label="使用方式">
-      <li><b>聽</b><div><strong>聽一集說書</strong><span>點開故事卡，按「開始說書」。每集兩到三分鐘，通勤路上就能聽完。</span></div></li>
+      <li><b>聽</b><div><strong>聽一集說書</strong><span>點開故事卡，按「開始說書」，聽阿城伯和小晴聊天。每集兩到三分鐘，通勤路上就能聽完。</span></div></li>
       <li><b>備</b><div><strong>準備一兩個引子</strong><span>挑一句暖身問題、一首老歌或一個關鍵字。輸入長輩出生年，看看當時他們幾歲。</span></div></li>
       <li><b>聊</b><div><strong>讓長輩當說書人</strong><span>你問、長輩說。記得慢慢來，不糾正記憶，多說「原來是這樣」。</span></div></li>
     </ol>
@@ -1053,7 +1053,7 @@ function renderGrid(){
         <div class="sub">${esc(ep.sub)}</div>
         <div class="meta">
           <span class="tag mono">${ep.from}–${ep.to}</span>
-          <span class="tag">約 ${minutes(ep)} 分鐘</span>
+          <span class="tag">${AUDIO.has(ep.id)?"錄音 ":"文字稿 "}約 ${minutes(ep)} 分鐘</span>
           ${state.birth?`<span class="tag age">${ageText(ep)}</span>`:""}
           ${ep.care && ep.cat==="時代記憶"?`<span class="tag care">需留意</span>`:""}
         </div>
@@ -1128,14 +1128,16 @@ function openEp(id){
     <div class="sheet-body" id="sbody">
       <div class="player">
         <button class="play" id="play"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg><span>開始說書</span></button>
-        <button class="ghost" id="stop" hidden>停止</button>
-        <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+        <input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="播放進度">
+        <span class="time mono" id="time">0:00</span>
         <div class="rate" role="group" aria-label="語速">語速
-          <button data-r="0.8" aria-pressed="false">慢</button><button data-r="1" aria-pressed="true">中</button><button data-r="1.2" aria-pressed="false">快</button>
+          <button data-r="0.85" aria-pressed="false">慢</button><button data-r="1" aria-pressed="true">中</button><button data-r="1.2" aria-pressed="false">快</button>
         </div>
-        <div class="note" id="pnote">由瀏覽器用兩種聲音朗讀，約 ${minutes(ep)} 分鐘。點任何一句可以從那裡開始聽。</div>
+        <div class="note" id="pnote">阿城伯與小晴的對談錄音。口語中會多一些「嗯、啊」，和下方文字稿略有不同。</div>
+        <audio id="aud" preload="none" ${AUDIO.has(ep.id)?`src="audio/ep${ep.id}.mp4"`:""}></audio>
       </div>
       <div class="hosts"><span><i class="who m" aria-hidden="true">城</i>阿城伯：土生土長的老台北，負責說故事</span><span><i class="who f" aria-hidden="true">晴</i>小晴：年輕主持人，負責發問</span></div>
+      <h4>對談文字稿</h4>
       <div class="story" id="story">${storyHTML}</div>
 
       <h4>聊天引子</h4>
@@ -1176,9 +1178,8 @@ dlg.addEventListener("click",e=>{if(e.target===dlg)closeEp()});
 function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,1800)}
 async function copy(text){try{await navigator.clipboard.writeText(text);toast("已複製")}catch(e){toast("無法自動複製，請手動選取文字")}}
 
-/* ---------- speech ---------- */
-const synth = window.speechSynthesis;
-let sp={rate:1,idx:0,playing:false,paused:false,sents:[]};
+/* ---------- audio ---------- */
+const AUDIO=new Set(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "26"]);
 const HOST={m:{name:"阿城伯",badge:"城"},f:{name:"小晴",badge:"晴"}};
 function parseStory(text){
   return text.split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{
@@ -1186,70 +1187,28 @@ function parseStory(text){
     return m?{sp:m[1]==="城"?"m":"f",text:m[2]}:{sp:"m",text:l};
   });
 }
-function pickVoices(){
-  const vs=synth?synth.getVoices():[];
-  const tw=vs.filter(v=>/zh[-_]TW/i.test(v.lang));
-  const pool=tw.length?tw:vs.filter(v=>/^zh/i.test(v.lang));
-  const isM=v=>/Reed|Rocko|Eddy|Grandpa|Yunjhe|Zhiwei|男/i.test(v.name);
-  const isF=v=>/美佳|Meijia|Mei-Jia|Flo|Sandy|Shelley|Grandma|Hanhan|Yating|HsiaoChen|HsiaoYu|女/i.test(v.name);
-  const f=pool.find(isF)||pool.find(v=>!isM(v))||pool[0]||null;
-  const m=pool.find(isM)||null;
-  return {f,m:m||f,distinct:!!m&&m!==f,any:!!(f||m)};
-}
-if(synth) synth.onvoiceschanged=()=>{};
-function setPlayUI(){
-  const b=$("#play"); if(!b) return;
-  const label = sp.playing&&!sp.paused?"暫停":(sp.paused?"繼續說書":"開始說書");
-  b.querySelector("span").textContent=label;
-  b.querySelector("svg").innerHTML = sp.playing&&!sp.paused?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4l13 8-13 8z"/>';
-  $("#stop").hidden=!sp.playing;
-}
-function highlight(i){
-  document.querySelectorAll("#story .s.on").forEach(n=>n.classList.remove("on"));
-  document.querySelectorAll("#story .turn.now").forEach(n=>n.classList.remove("now"));
-  const n=document.querySelector(`#story .s[data-i="${i}"]`);
-  if(n){n.classList.add("on");n.closest(".turn").classList.add("now");n.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})}
-  const bar=$("#bar"); if(bar) bar.style.width=(sp.sents.length?((i+1)/sp.sents.length*100):0)+"%";
-}
-function speakFrom(i){
-  if(!synth){return}
-  synth.cancel();
-  sp.idx=i; sp.playing=true; sp.paused=false; setPlayUI();
-  const vv=pickVoices();
-  const run=()=>{
-    if(!sp.playing||sp.idx>=sp.sents.length){ if(sp.idx>=sp.sents.length){sp.playing=false;setPlayUI();highlight(-1);const bar=$("#bar");if(bar)bar.style.width="100%";} return}
-    const cur=sp.sents[sp.idx];
-    const u=new SpeechSynthesisUtterance(cur.text.replace(/[「」『』《》〈〉]/g,""));
-    u.lang="zh-TW"; if(vv[cur.sp]) u.voice=vv[cur.sp]; u.rate=sp.rate;
-    u.pitch = vv.distinct?1:(cur.sp==="m"?0.6:1.25);
-    highlight(sp.idx);
-    u.onend=()=>{ if(!sp.playing) return; sp.idx++; run(); };
-    u.onerror=(e)=>{ if(e.error==="interrupted"||e.error==="canceled") return; sp.playing=false; setPlayUI(); const n=$("#pnote"); if(n) n.textContent="朗讀中斷了，可以再按一次，或直接閱讀文字稿。"; };
-    synth.speak(u);
-  };
-  run();
-}
-function stopSpeech(){ sp.playing=false; sp.paused=false; if(synth) synth.cancel(); setPlayUI(); }
+const fmt=t=>isFinite(t)?Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0"):"0:00";
+function stopSpeech(){const a=$("#aud"); if(a){a.pause()}}
 function bindSheet(ep){
-  sp.sents=[...document.querySelectorAll("#story .s")].map(n=>({text:n.textContent,sp:n.dataset.sp}));
-  sp.idx=0;
-  if(!synth){ $("#play").disabled=true; $("#pnote").textContent="這個瀏覽器不支援朗讀，請直接閱讀下方的說書稿，或念給長輩聽。"; }
-  else { setTimeout(()=>{ const vv=pickVoices(); const n=$("#pnote"); if(!n) return;
-      if(!vv.any) n.textContent="找不到中文語音，朗讀可能是外語口音。可在系統設定加入「中文（台灣）」語音。";
-      else if(!vv.distinct) n.textContent="這台裝置只有一種中文語音，阿城伯和小晴會用高低不同的音調來區分。點任何一句可以從那裡開始聽。"; },800); }
-  $("#close").onclick=closeEp;
-  $("#play").onclick=()=>{
-    if(!synth) return;
-    if(sp.playing&&!sp.paused){ synth.pause(); sp.paused=true; setPlayUI(); }
-    else if(sp.paused){ synth.resume(); sp.paused=false; setPlayUI(); }
-    else speakFrom(0);
+  const a=$("#aud"), play=$("#play"), seek=$("#seek"), time=$("#time");
+  let dragging=false;
+  if(!AUDIO.has(ep.id)){ play.disabled=true; play.style.opacity=.5; seek.disabled=true; $("#pnote").textContent="這一集的錄音還在製作中，請先閱讀下方的對談文字稿，或念給長輩聽。"; }
+  const ui=()=>{
+    const on=!a.paused&&!a.ended;
+    play.querySelector("span").textContent = on?"暫停":(a.currentTime>0&&!a.ended?"繼續說書":"開始說書");
+    play.querySelector("svg").innerHTML = on?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4l13 8-13 8z"/>';
   };
-  $("#stop").onclick=()=>{stopSpeech();highlight(-1);$("#bar").style.width="0"};
+  const tick=()=>{ if(!dragging&&a.duration) seek.value=Math.round(a.currentTime/a.duration*1000); time.textContent=fmt(a.currentTime)+(a.duration?" / "+fmt(a.duration):""); };
+  a.addEventListener("play",ui); a.addEventListener("pause",ui); a.addEventListener("ended",ui);
+  a.addEventListener("timeupdate",tick); a.addEventListener("loadedmetadata",tick);
+  a.addEventListener("error",()=>{ play.disabled=true; $("#pnote").textContent="這一集的錄音載入不了，請直接閱讀下方的對談文字稿，或念給長輩聽。"; });
+  play.onclick=()=>{ if(a.paused){ const p=a.play(); if(p&&p.catch) p.catch(()=>{}); } else a.pause(); };
+  seek.addEventListener("input",()=>{dragging=true; if(a.duration) time.textContent=fmt(seek.value/1000*a.duration)+" / "+fmt(a.duration)});
+  seek.addEventListener("change",()=>{ if(a.duration) a.currentTime=seek.value/1000*a.duration; dragging=false; });
   document.querySelectorAll(".rate button").forEach(b=>b.onclick=()=>{
-    sp.rate=+b.dataset.r; document.querySelectorAll(".rate button").forEach(x=>x.setAttribute("aria-pressed",x===b));
-    if(sp.playing) speakFrom(sp.idx);
+    a.playbackRate=+b.dataset.r; document.querySelectorAll(".rate button").forEach(x=>x.setAttribute("aria-pressed",x===b));
   });
-  $("#story").onclick=e=>{const s=e.target.closest(".s"); if(s&&synth) speakFrom(+s.dataset.i)};
+  $("#close").onclick=closeEp;
   $("#copyq").onclick=()=>copy(`【台北說書人】第${+ep.id}集 ${ep.title}\n\n暖身：\n${ep.q.warm.map(x=>"・"+x).join("\n")}\n\n回憶：\n${ep.q.recall.map(x=>"・"+x).join("\n")}\n\n延伸：\n${ep.q.deep.map(x=>"・"+x).join("\n")}${ep.care?"\n\n注意："+ep.care:""}`);
   $("#copyl").onclick=()=>copy(location.href.split("#")[0]+"#ep-"+ep.id);
 }
